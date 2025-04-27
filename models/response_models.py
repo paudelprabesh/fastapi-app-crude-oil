@@ -1,6 +1,13 @@
-from pydantic import BaseModel, Field
+from typing import List, Union
 
-from models.crude_oil_import_data_model import PaginatedCrudeOilDataModel
+from pydantic import BaseModel, Field
+from uuid import UUID
+
+from models.crude_oil_import_data_model import (
+    CrudeOilDataModelFilter,
+    CrudeOilDataModelPut,
+    CrudeOilDataModelPost,
+)
 
 
 class ResponseModel(BaseModel):
@@ -9,9 +16,20 @@ class ResponseModel(BaseModel):
     data: dict = Field(default_factory=dict)
 
 
+class CrudeOilDataResponseModel(CrudeOilDataModelPost):
+    uuid: UUID
+
+
+class SingleDataGetResponseModel(ResponseModel):
+    status: int = "200"
+    message: str = "Success"
+    data: CrudeOilDataResponseModel
+
+
 class DataCreatedResponseModel(ResponseModel):
     status: int = 201
     message: str = "Success"
+    data: CrudeOilDataResponseModel
 
 
 class FailureResponseModel(ResponseModel):
@@ -22,10 +40,39 @@ class FailureResponseModel(ResponseModel):
 class MultipleDataCreatedResponseModel(ResponseModel):
     status: int = 201
     message: str = "Success"
-    data: list = []
+    data: list[CrudeOilDataResponseModel]
+
+
+class DataUpdateResponseModel(ResponseModel):
+    status: int = 201
+    message: str = "Success"
+    data: CrudeOilDataResponseModel
+
+
+class PaginatedMetaData(BaseModel):
+    skip: int
+    limit: int
+    total: int
+
+
+class PaginatedCrudeOilDataModel(BaseModel):
+    metadata: PaginatedMetaData
+    paginated_data: List[CrudeOilDataModelFilter]
 
 
 class PaginatedResponseModel(ResponseModel):
     status: int = 201
     message: str = "Success"
     data: PaginatedCrudeOilDataModel
+
+
+class SingleDataRetrieveNotFoundResponseModel(ResponseModel):
+    status: int = 200
+    message: str = "Success"
+    data: dict = {}
+
+
+class SingleDataUpdateUnsuccessfulResponseModel(ResponseModel):
+    status: int = 400
+    message: str = "Failed"
+    data: dict = {}

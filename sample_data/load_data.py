@@ -5,7 +5,7 @@ import httpx
 
 
 URL = "http://0.0.0.0:5321/crude-oil-imports/bulk"
-BATCH_SIZE = 1000
+BATCH_SIZE = 3000
 
 
 async def main():

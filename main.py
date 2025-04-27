@@ -1,12 +1,8 @@
 import logging
 
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
-from fastapi.encoders import jsonable_encoder
-from fastapi.exceptions import RequestValidationError
-
-from models.response_models import FailureResponseModel
 from routers.crude_oil_imports import router
 
 from dao.schema import Base
@@ -33,9 +29,9 @@ logger = logging.getLogger(__name__)
 app.include_router(router=router)
 
 
-@app.exception_handler(RequestValidationError)
-def log_every_exception(request: Request, exception: RequestValidationError):
-    logger.error(f"Exception caught: {exception}")
-    return FailureResponseModel(
-        status=status.HTTP_422_UNPROCESSABLE_ENTITY, message=str(exception)
-    )
+# @app.exception_handler(RequestValidationError)
+# def log_every_exception(request: Request, exception: RequestValidationError):
+#     logger.error(f"Exception caught: {exception}")
+#     return FailureResponseModel(
+#         status=status.HTTP_422_UNPROCESSABLE_ENTITY, message=str(exception)
+#     )
