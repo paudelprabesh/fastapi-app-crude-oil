@@ -3,8 +3,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-from models.request_models import (CrudeOilDataModelFilter,
-                                   CrudeOilDataModelPost)
+from models.request_models import CrudeOilDataModelFilter, CrudeOilDataModelPost
 
 
 class ResponseModel(BaseModel):

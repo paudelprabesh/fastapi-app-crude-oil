@@ -7,17 +7,22 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 import bll.crude_oil_imports as bll
 from dependencies import get_db
-from models.request_models import (CrudeOilDataModelFilter,
-                                   CrudeOilDataModelPatch,
-                                   CrudeOilDataModelPost, CrudeOilDataModelPut)
-from models.response_models import (DataCreatedResponseModel,
-                                    DataUpdateResponseModel,
-                                    FailureResponseModel,
-                                    MultipleDataCreatedResponseModel,
-                                    PaginatedResponseModel,
-                                    SingleDataGetResponseModel,
-                                    SingleDataRetrieveNotFoundResponseModel,
-                                    SingleDataUpdateUnsuccessfulResponseModel)
+from models.request_models import (
+    CrudeOilDataModelFilter,
+    CrudeOilDataModelPatch,
+    CrudeOilDataModelPost,
+    CrudeOilDataModelPut,
+)
+from models.response_models import (
+    DataCreatedResponseModel,
+    DataUpdateResponseModel,
+    FailureResponseModel,
+    MultipleDataCreatedResponseModel,
+    PaginatedResponseModel,
+    SingleDataGetResponseModel,
+    SingleDataRetrieveNotFoundResponseModel,
+    SingleDataUpdateUnsuccessfulResponseModel,
+)
 
 router = APIRouter(tags=["US crude oil imports"])
 

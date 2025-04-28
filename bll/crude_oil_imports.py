@@ -8,12 +8,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 import dal.crude_oil_imports as dal
 from dao.schema import CrudeOilImportsSchema
-from models.request_models import (CrudeOilDataModelFilter,
-                                   CrudeOilDataModelPatch,
-                                   CrudeOilDataModelPost, CrudeOilDataModelPut)
-from models.response_models import (CrudeOilDataResponseModel,
-                                    PaginatedCrudeOilDataModel,
-                                    PaginatedMetaData)
+from models.request_models import (
+    CrudeOilDataModelFilter,
+    CrudeOilDataModelPatch,
+    CrudeOilDataModelPost,
+    CrudeOilDataModelPut,
+)
+from models.response_models import (
+    CrudeOilDataResponseModel,
+    PaginatedCrudeOilDataModel,
+    PaginatedMetaData,
+)
 
 logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
