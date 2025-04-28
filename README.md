@@ -5,7 +5,7 @@ You can use it to create, retrieve, update, and delete records in the database.
 
 
 ### Prerequisites
-1. **Python**: Please visit https://wiki.python.org/moin/BeginnersGuide/Download to get python installed.
+1. **Python >= 3.9**: This application requires at least python 3.9 or a newer version. Please visit https://wiki.python.org/moin/BeginnersGuide/Download to get python installed.
 2. **PostgresSQL**: Please use the `docker-compose.yml` to run the postgres container (instructions below). 
    See [Install Docker engine](https://docs.docker.com/engine/install/) or 
     [Install Docker Desktop](https://docs.docker.com/desktop/) guide for installing docker.
