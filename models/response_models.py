@@ -3,7 +3,7 @@ from typing import List, Union
 from pydantic import BaseModel, Field
 from uuid import UUID
 
-from models.crude_oil_import_data_model import (
+from models.request_models import (
     CrudeOilDataModelFilter,
     CrudeOilDataModelPut,
     CrudeOilDataModelPost,

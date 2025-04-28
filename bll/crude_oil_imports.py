@@ -7,7 +7,7 @@ from uuid import UUID
 
 import dal.crude_oil_imports as dal
 from dao.schema import CrudeOilImportsSchema
-from models.crude_oil_import_data_model import (
+from models.request_models import (
     CrudeOilDataModelFilter,
     CrudeOilDataModelPut,
     CrudeOilDataModelPost,

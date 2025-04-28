@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
 
-from models.crude_oil_import_data_model import (
+from models.request_models import (
     CrudeOilDataModelFilter,
     CrudeOilDataModelPost,
     CrudeOilDataModelPut,

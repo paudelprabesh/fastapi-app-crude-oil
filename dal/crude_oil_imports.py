@@ -7,7 +7,7 @@ from sqlalchemy import delete
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from models.crude_oil_import_data_model import CrudeOilDataModelFilter
+from models.request_models import CrudeOilDataModelFilter
 
 from dao.schema import CrudeOilImportsSchema
 from models.response_models import CrudeOilDataResponseModel
