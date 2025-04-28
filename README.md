@@ -1,4 +1,4 @@
-# FastAPI server for creating, retrieving, updating and deleting US crude oil import dataset 
+# FastAPI application for creating, retrieving, updating and deleting US crude oil import dataset 
 
 This project provides a FastAPI application that allows you to manage a dataset of US crude oil imports.  
 You can use it to create, retrieve, update, and delete records in the database.
@@ -48,7 +48,7 @@ port 5342.
 ### Load dataset
 
 `sample_data/` has the crude oil data and the script `load_data.py` which can be used to load the data.csv into the
-postgres db. Instructions on how to use it are in the `Readme.md` within the same directory.
+postgres db. Instructions on how to use it are in the `README.md` within the same directory.
 
 ### Design decisions:
 The following design principles were applied in the development of this API:
