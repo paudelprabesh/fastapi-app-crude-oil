@@ -82,7 +82,7 @@ async def get_paginated_crude_oil_imports(
     "/crude-oil-imports/{uuid}",
     status_code=status.HTTP_200_OK,
     response_model=Union[
-        SingleDataGetResponseModel | SingleDataRetrieveNotFoundResponseModel
+        SingleDataGetResponseModel, SingleDataRetrieveNotFoundResponseModel
     ],
 )
 async def get_crude_oil_imports_from_uuid(
@@ -100,7 +100,7 @@ async def get_crude_oil_imports_from_uuid(
 
     ### Returns:
 
-    - `Union[SingleDataGetResponseModel  |  SingleDataRetrieveNotFoundResponseModel]`:
+    - `Union[SingleDataGetResponseModel, SingleDataRetrieveNotFoundResponseModel]`:
         A SingleDataGetResponseModel containing the requested crude oil import data
         if the record is found. A SingleDataRetrieveNotFoundResponseModel is returned
         if the record is not found.
@@ -177,7 +177,7 @@ async def insert_bulk(
 
     ### Returns:
 
-    - `Union[MultipleDataCreatedResponseModel  |  FailureResponseModel]`:
+    - `Union[MultipleDataCreatedResponseModel,  FailureResponseModel]`:
         A MultipleDataCreatedResponseModel containing the newly created crude oil import
         data if the records are created successfully. A FailureResponseModel is returned
         if an error occurs during processing.
