@@ -61,8 +61,9 @@ database id from the client, which is very easy to mess up.
 For example: A mistaken id for a delete query, deletes a record. It also hides database primary key and how they are setup.
 2. `Null values`: For simplicity, we don't allow null values to any records. A quick glance showed that there were no nulls
 in the provided dataset, and hence assumed it to simplify design.
-3. `Year and Month`. In addition to be `int`, they also need to be inbetween a certain range to be valid.
-Year should be between 1900 and 2100, and month should be in range of 1-12.
+3. `year and month`. In addition to being `int`, they also need to be inbetween a certain range to be valid.
+Year should be between `1900` and `2100`, and month should be in range of `1` and `12`.
+4. `quantity`: `quantity` must be a positive integer.
 
 ### Sample API usage:
 

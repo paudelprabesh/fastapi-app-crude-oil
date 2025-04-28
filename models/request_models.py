@@ -22,6 +22,7 @@ class CrudeOilDataModelBase(BaseModel):
 
     @field_validator("month")
     def validate_month(cls, value):
+        # None is handled later if need be
         if value is None:
             return None
         if not 1 <= value <= 12:
@@ -30,10 +31,20 @@ class CrudeOilDataModelBase(BaseModel):
 
     @field_validator("year")
     def validate_year(cls, value):
+        # None is handled later if need be
         if value is None:
             return None
         if not 1900 <= value <= 2100:
             raise ValueError("Year must be between 1900 and 2100")
+        return value
+
+    @field_validator("quantity")
+    def validate_year(cls, value):
+        # None is handled later if need be
+        if value is None:
+            return None
+        if not value > 0:
+            raise ValueError("quantity must be greater than 0.")
         return value
 
 
@@ -45,7 +56,7 @@ class CrudeOilDataModelPost(CrudeOilDataModelBase):
     destination_name: str = Field(alias="destinationName")
     destination_type_name: str = Field(alias="destinationTypeName")
     grade_name: str = Field(alias="gradeName")
-    quantity: int
+    quantity: int = Field(examples=[1])
 
     class Config:
         validate_by_name = True
