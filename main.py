@@ -17,22 +17,44 @@ async def lifespan(_: FastAPI):
 
 
 description = """
-View, Add, Edit, and be creative with the US crude Oil Imports Data. All the endpoints are documented within.
+##   US Crude Oil Imports Data API
 
-### Design Notes :
-**UUID:** UUIDs are used to identify  each records.
-Instead of relying on the database's auto-generated integer IDs, we use `UUID` and hide 
-the table row id from the client, which is very easy to mess up. 
-For example: A mistaken id for a delete query, deletes a record. It also hides database primary key 
-and how they are setup.
 
-**Null values**: For simplicity, we don't allow null values to any records. A quick glance showed that there were no nulls
-in the provided dataset, and hence assumed it to simplify design.
 
-**Year and Month**: In addition to being `int`, they also need to be inbetween a certain range to be valid.
-Year should be between `1900` and `2100`, and month should be in range of `1` and `12`.
+This API provides access to data on US crude oil imports, allowing you to view, add, and modify records.  
+All endpoints are fully documented within the OpenAPI specification.
 
-**quantity**: `quantity` must be a positive integer.
+###   API Overview
+
+This API enables you to:
+
+* Retrieve crude oil import data.
+* Add new crude oil import records.
+* Modify existing crude oil import records.
+* Delete an existing crude oil import record.
+
+###   Design Notes
+
+The following design principles were applied in the development of this API:
+
+* **Universally Unique Identifiers (UUIDs):**
+    * Each crude oil import record is identified by a `UUID`. These APIs generate and use UUIDs instead of database 
+      table's primary key column. These UUID cannot be set by user, but is shown to the user after creation of a record.
+    `UUID` can then be used to `update` and `delete` the existing records.
+    * **Rationale:**
+        * **Data Integrity:** Using UUIDs significantly reduces the risk of accidentally modifying or deleting the wrong record.
+          For example, a client providing an incorrect integer ID in a delete request could unintentionally delete a different record.  UUIDs make such errors far less likely.
+        * **Security:** UUIDs obscure the database's primary key structure and prevent clients from inferring how records are organized or numbered. 
+* **Non-Nullable Values:**
+    * For simplicity and data consistency, this API does not allow to insert null values in any record fields.
+    * **Rationale:**
+        * The initial dataset provided contained no null values.  
+        This design decision simplifies data handling and ensures that all records have complete information.
+* **Data Validation:**
+    * The API enforces data validation rules to ensure data quality:
+        * **year:** `year` values must be integers between 1900 and 2100 (inclusive).
+        * **month:** `month` values must be integers between 1 and 12 (inclusive).
+        * **quantity:** `quantity` values must be positive integers.
 """
 
 app = FastAPI(
