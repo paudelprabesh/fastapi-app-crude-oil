@@ -63,6 +63,9 @@ The following design principles were applied in the development of this API:
         * **Security:** UUIDs obscure the database's primary key structure and prevent clients from inferring how records are organized or numbered. 
 * **Non-Nullable Values:**
     * For simplicity and data consistency, this API does not allow to insert null values in any record fields.
+    If we really want to erase a column value, we can use an empty string for the string columns, the integer columns 
+    are core values, erasing them doesn't make a lot of sense anyway.
+        
     * **Rationale:**
         * The initial dataset provided contained no null values.  
         This design decision simplifies data handling and ensures that all records have complete information.
