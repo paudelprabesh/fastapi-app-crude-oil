@@ -21,19 +21,18 @@ description = """
 
 
 
-This API provides access to data on US crude oil imports, allowing you to view, add, and modify records.  
-All endpoints are fully documented within the OpenAPI specification.
+This API provides access to data on US crude oil imports, allowing you to view, add, and modify records.  All endpoints 
+are fully documented within the OpenAPI specification.
 
 ###   API Overview
 
 This API enables you to:
-
 * Retrieve crude oil import data.
 * Add new crude oil import records.
 * Modify existing crude oil import records.
 * Delete an existing crude oil import record.
 
-###   Design Notes
+###   Design decisions:
 
 The following design principles were applied in the development of this API:
 

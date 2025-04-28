@@ -50,7 +50,7 @@ port 5342.
 `sample_data/` has the crude oil data and the script `load_data.py` which can be used to load the data.csv into the
 postgres db. Instructions on how to use it are in the `Readme.md` within the same directory.
 
-### Design Notes:
+### Design decisions:
 The following design principles were applied in the development of this API:
 
 * **Universally Unique Identifiers (UUIDs):**
