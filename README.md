@@ -1,39 +1,8 @@
 # FastAPI server for creating, retrieving, updating and deleting US crude oil import dataset 
 
 This project provides a FastAPI application that allows you to manage a dataset of US crude oil imports.  
-You can use it to create, retrieve, update, and delete records in the dataset.
+You can use it to create, retrieve, update, and delete records in the database.
 
-### Features
-
-* **Retrieve:**
-
-    * **Get Paginated Crude Oil Imports:** Retrieves a list of crude oil import records in paginated form. This allows for efficient processing of large datasets by returning data in smaller, manageable chunks.
-        * Endpoint: `GET /crude-oil-imports/`
-        * Status Code: 200 OK
-
-    * **Get Crude Oil Imports by UUID:** Retrieves a specific crude oil import record using its unique identifier (UUID).
-        * Endpoint: `GET /crude-oil-imports/{uuid}`
-        * Status Code: 200 OK
-* **Create:**
-
-    * **Insert Crude Oil Import:** Adds a new crude oil import record to the database.
-        * Endpoint: `POST /crude-oil-imports/`
-        * Status Code: 201 Created
-    * **Insert Bulk Crude Oil Imports:** Adds multiple crude oil import records to the database in a single request.
-        * Endpoint: `POST /crude-oil-imports/bulk`
-        * Status Code: 201 Created
-* **Update:**
-
-    * **Patch Crude Oil Import by UUID:** Modifies specific fields of an existing crude oil import record identified by its UUID.  This performs a partial update.
-        * Endpoint: `PATCH /crude-oil-imports/{uuid}`
-        * Status Code: 200 OK
-    * **Update Crude Oil Import by UUID:** Replaces the entire content of an existing crude oil import record with new data.
-        * Endpoint: `PUT /crude-oil-imports/{uuid}`
-        * Status Code: 200 OK
-* **Delete:**
-    * **Delete Crude Oil Import by UUID:** Removes a crude oil import record from the database using its UUID.
-        * Endpoint: `DELETE /crude-oil-imports/{uuid}`
-        * Status Code: 200 OK
 
 ### Prerequisites
 1. **Python**: Please visit https://wiki.python.org/moin/BeginnersGuide/Download to get python installed.
@@ -94,3 +63,298 @@ For example: A mistaken id for a delete query, deletes a record. It also hides d
 in the provided dataset, and hence assumed it to simplify design.
 3. `Year and Month`. In addition to be `int`, they also need to be inbetween a certain range to be valid.
 Year should be between 1900 and 2100, and month should be in range of 1-12.
+
+### Sample API usage:
+
+I highly recommend using swagger UI http://0.0.0.0:5321/docs# to experiment on the endpoints.
+Each endpoint is documented with sample request and response there. Here, I have listed quick urls or curl commands that can be 
+used to do CRUD operations.
+
+### Retrieve:
+    
+  * **Get Paginated Crude Oil Imports:** Retrieves a list of crude oil import records in paginated form. This allows for efficient processing of large datasets by returning data in smaller, manageable chunks.
+      * Endpoint: `GET /crude-oil-imports/`
+      * Status Code: 200 OK
+      * Sample request: http://0.0.0.0:5321/crude-oil-imports/?skip=0&limit=2
+      * Sample response:
+      * ```json
+        {
+            "status": 201,
+            "message": "Success",
+            "data": {
+              "metadata": {
+                "skip": 0,
+                "limit": 2,
+                "total": 483056
+              },
+              "paginated_data": [
+                {
+                  "year": 2009,
+                  "month": 1,
+                  "originName": "Belize",
+                  "originTypeName": "Country",
+                  "destinationName": "EXXONMOBIL REFINING & SPLY CO / BEAUMONT / TX",
+                  "destinationTypeName": "Refinery",
+                  "gradeName": "Light Sour",
+                  "quantity": 61,
+                  "uuid": "6ca3c2e0-a6e1-4c50-a278-3ac51bc713a7"
+                },
+                {
+                  "year": 2009,
+                  "month": 1,
+                  "originName": "Belize",
+                  "originTypeName": "Country",
+                  "destinationName": "FLINT HILLS RESOURCES LP / WEST / TX",
+                  "destinationTypeName": "Refinery",
+                  "gradeName": "Light Sour",
+                  "quantity": 62,
+                  "uuid": "3714f2a5-6d37-4459-b939-a535bf34bc4a"
+                }
+              ]
+            }
+        }
+         ```
+
+    * **Get Crude Oil Imports by UUID:** Retrieves a specific crude oil import record using its unique identifier (UUID).
+        * Endpoint: `GET /crude-oil-imports/{uuid}`
+        * Status Code: 200 OK
+        * Sample request: http://0.0.0.0:5321/crude-oil-imports/6ca3c2e0-a6e1-4c50-a278-3ac51bc713a7
+        * Sample response: 
+        ```json
+        {
+           "status": "200",
+           "message": "Success",
+           "data": {
+               "year": 2009,
+               "month": 1,
+               "originName": "Belize",
+               "originTypeName": "Country",
+               "destinationName": "EXXONMOBIL REFINING & SPLY CO / BEAUMONT / TX",
+               "destinationTypeName": "Refinery",
+               "gradeName": "Light Sour",
+               "quantity": 61,
+               "uuid": "6ca3c2e0-a6e1-4c50-a278-3ac51bc713a7"
+          }
+        }
+         ```
+### Create:
+
+  * **Insert Crude Oil Import:** Adds a new crude oil import record to the database.
+      * Endpoint: `POST /crude-oil-imports/`
+      * Status Code: `201` Created
+      * Sample request:
+      ```bash 
+    curl -X 'POST' \
+      'http://0.0.0.0:5321/crude-oil-imports/' \
+      -H 'accept: application/json' \
+      -H 'Content-Type: application/json' \
+      -d '{
+      "year": 2000,
+      "month": 1,
+      "originName": "Brazil",
+      "originTypeName": "Brasilia",
+      "destinationName": "Argentina",
+      "destinationTypeName": "Buenos",
+      "gradeName": "Refinery",
+      "quantity": 2
+    }'
+    ```
+    * Sample response:
+    ```json
+    {
+        "status": 201,
+        "message": "Success",
+        "data": {
+          "year": 2000,
+          "month": 1,
+          "originName": "Brazil",
+          "originTypeName": "Brasilia",
+          "destinationName": "Argentina",
+          "destinationTypeName": "Buenos",
+          "gradeName": "Refinery",
+          "quantity": 2,
+          "uuid": "16838e66-cec5-4eb6-a7be-87095b8df208"
+        }
+    }
+    ```
+    * **Insert Bulk Crude Oil Imports:** Adds multiple crude oil import records to the database in a single request.
+        * Endpoint: `POST /crude-oil-imports/bulk`
+        * Status Code: 201 Created
+        * Sample request: 
+          ```bash
+          curl -X 'POST' \
+          'http://0.0.0.0:5321/crude-oil-imports/bulk' \
+          -H 'accept: application/json' \
+          -H 'Content-Type: application/json' \
+          -d '[
+            {
+              "year": 2011,
+              "month": 1,
+              "originName": "Chile",
+              "originTypeName": "Botswana",
+              "destinationName": "Temporary",
+              "destinationTypeName": "Buenos",
+              "gradeName": "Refinery",
+              "quantity": 2
+            },
+            {
+              "year": 2010,
+              "month": 1,
+              "originName": "Brazil",
+              "originTypeName": "Brasilia",
+              "destinationName": "Argentina",
+              "destinationTypeName": "Buenos",
+              "gradeName": "Refinery",
+              "quantity": 2
+            }
+            ]'
+          ```
+        * Sample response: 
+          ```json
+            {
+              "status": 201,
+              "message": "Success",
+              "data": [
+                {
+                  "year": 2011,
+                  "month": 1,
+                  "originName": "Chile",
+                  "originTypeName": "Botswana",
+                  "destinationName": "Temporary",
+                  "destinationTypeName": "Buenos",
+                  "gradeName": "Refinery",
+                  "quantity": 2,
+                  "uuid": "9aa50db4-6702-4bbd-a4df-3caaef4826ef"
+                },
+                {
+                  "year": 2010,
+                  "month": 1,
+                  "originName": "Brazil",
+                  "originTypeName": "Brasilia",
+                  "destinationName": "Argentina",
+                  "destinationTypeName": "Buenos",
+                  "gradeName": "Refinery",
+                  "quantity": 2,
+                  "uuid": "20256ff9-2a93-403b-92c7-f5d5af08d340"
+                }
+              ]
+            }
+          ```
+* **Update:**
+
+    * **Patch Crude Oil Import by UUID:** Modifies specific fields of an existing crude oil import record identified by its UUID.  This performs a partial update.
+        * Endpoint: `PATCH /crude-oil-imports/{uuid}`
+        * Status Code: 200 OK
+        * Sample request: 
+           ```bash
+          curl -X 'POST' \
+          'http://0.0.0.0:5321/crude-oil-imports/bulk' \
+          -H 'accept: application/json' \
+          -H 'Content-Type: application/json' \
+          -d '[
+            {
+              "year": 2011,
+              "month": 1,
+              "originName": "Chile",
+              "originTypeName": "Botswana",
+              "destinationName": "Temporary",
+              "destinationTypeName": "Buenos",
+              "gradeName": "Refinery",
+              "quantity": 2
+            },
+            {
+              "year": 2010,
+              "month": 1,
+              "originName": "Brazil",
+              "originTypeName": "Brasilia",
+              "destinationName": "Argentina",
+              "destinationTypeName": "Buenos",
+              "gradeName": "Refinery",
+              "quantity": 2
+            }
+            ]'
+          ```
+        * Sample response:
+          ```json
+          {
+              "status": 201,
+              "message": "Success",
+              "data": {
+                "year": 1999,
+                "month": 11,
+                "originName": "USA",
+                "originTypeName": "PA",
+                "destinationName": "UK",
+                "destinationTypeName": "LONDON",
+                "gradeName": "Refinery",
+                "quantity": 190,
+                "uuid": "9aa50db4-6702-4bbd-a4df-3caaef4826ef"
+              }
+            }
+          ```
+      
+    * **Update Crude Oil Import by UUID:** Replaces the entire content of an existing crude oil import record with new data.
+        * Endpoint: `PUT /crude-oil-imports/{uuid}`
+        * Status Code: 200 OK
+        * Sample request:
+          ```bash
+          curl -X 'PUT' \
+            'http://0.0.0.0:5321/crude-oil-imports/9aa50db4-6702-4bbd-a4df-3caaef4826ef' \
+            -H 'accept: application/json' \
+            -H 'Content-Type: application/json' \
+            -d '{
+            "year": 2000,
+            "month": 1,
+            "originName": "string",
+            "originTypeName": "string",
+            "destinationName": "string",
+            "destinationTypeName": "string",
+            "gradeName": "string",
+            "quantity": 0
+          }'
+          ```
+       * Sample response:
+         ```json
+         {
+         "status": 201,
+         "message": "Success",
+         "data": {
+           "year": 2000,
+           "month": 1,
+           "originName": "string",
+           "originTypeName": "string",
+           "destinationName": "string",
+           "destinationTypeName": "string",
+           "gradeName": "string",
+           "quantity": 0,
+           "uuid": "9aa50db4-6702-4bbd-a4df-3caaef4826ef"
+          }
+         }
+         ```
+* **Delete:**
+    * **Delete Crude Oil Import by UUID:** Removes a crude oil import record from the database using its UUID.
+        * Endpoint: `DELETE /crude-oil-imports/{uuid}`
+        * Status Code: 200 OK
+        * Sample request: 
+        ```bash
+        curl -X 'DELETE' 'http://0.0.0.0:5321/crude-oil-imports/9aa50db4-6702-4bbd-a4df-3caaef4826ef' \-H 'accept: application/json'
+        ``` 
+        * Sample response:
+        ```json
+      {
+          "status": 201,
+          "message": "Success",
+          "data": {
+            "year": 2000,
+            "month": 1,
+            "originName": "string",
+            "originTypeName": "string",
+            "destinationName": "string",
+            "destinationTypeName": "string",
+            "gradeName": "string",
+            "quantity": 0,
+            "uuid": "9aa50db4-6702-4bbd-a4df-3caaef4826ef"
+          }
+        }
+        ```
+      
