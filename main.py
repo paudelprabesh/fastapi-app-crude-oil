@@ -1,12 +1,11 @@
 import logging
-
-from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
-from routers.crude_oil_imports import router
+from fastapi import FastAPI
 
 from dao.schema import Base
 from dao.session import engine
+from routers.crude_oil_imports import router
 
 
 @asynccontextmanager

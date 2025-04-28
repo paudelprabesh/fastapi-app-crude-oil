@@ -1,15 +1,13 @@
 import logging
-
 import uuid
-from fastapi import HTTPException, status
-from sqlalchemy import select, func, update
-from sqlalchemy import delete
 
+from fastapi import HTTPException, status
+from sqlalchemy import delete, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from models.request_models import CrudeOilDataModelFilter, CrudeOilDataModelPost
-
 from dao.schema import CrudeOilImportsSchema
+from models.request_models import (CrudeOilDataModelFilter,
+                                   CrudeOilDataModelPost)
 from models.response_models import CrudeOilDataResponseModel
 
 logging.basicConfig(level=logging.ERROR)

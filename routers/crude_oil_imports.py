@@ -1,31 +1,23 @@
 import logging
-
-from fastapi import HTTPException
 from typing import List, Union
-
-from fastapi import APIRouter, Depends, status
-from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
 
-from models.request_models import (
-    CrudeOilDataModelFilter,
-    CrudeOilDataModelPost,
-    CrudeOilDataModelPut,
-    CrudeOilDataModelPatch,
-)
-import bll.crude_oil_imports as bll
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.ext.asyncio import AsyncSession
 
+import bll.crude_oil_imports as bll
 from dependencies import get_db
-from models.response_models import (
-    DataCreatedResponseModel,
-    FailureResponseModel,
-    MultipleDataCreatedResponseModel,
-    PaginatedResponseModel,
-    DataUpdateResponseModel,
-    SingleDataRetrieveNotFoundResponseModel,
-    SingleDataGetResponseModel,
-    SingleDataUpdateUnsuccessfulResponseModel,
-)
+from models.request_models import (CrudeOilDataModelFilter,
+                                   CrudeOilDataModelPatch,
+                                   CrudeOilDataModelPost, CrudeOilDataModelPut)
+from models.response_models import (DataCreatedResponseModel,
+                                    DataUpdateResponseModel,
+                                    FailureResponseModel,
+                                    MultipleDataCreatedResponseModel,
+                                    PaginatedResponseModel,
+                                    SingleDataGetResponseModel,
+                                    SingleDataRetrieveNotFoundResponseModel,
+                                    SingleDataUpdateUnsuccessfulResponseModel)
 
 router = APIRouter(tags=["US crude oil imports"])
 

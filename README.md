@@ -247,39 +247,27 @@ used to do CRUD operations.
         * Status Code: 200 OK
         * Sample request: 
            ```bash
-          curl -X 'POST' \
-          'http://0.0.0.0:5321/crude-oil-imports/bulk' \
+          curl -X 'PATCH' \
+          'http://0.0.0.0:5321/crude-oil-imports/947eb299-189f-47e4-a0b7-85ffb2630cbc' \
           -H 'accept: application/json' \
           -H 'Content-Type: application/json' \
-          -d '[
-            {
-              "year": 2011,
-              "month": 1,
-              "originName": "Chile",
-              "originTypeName": "Botswana",
-              "destinationName": "Temporary",
-              "destinationTypeName": "Buenos",
-              "gradeName": "Refinery",
-              "quantity": 2
-            },
-            {
-              "year": 2010,
-              "month": 1,
-              "originName": "Brazil",
-              "originTypeName": "Brasilia",
-              "destinationName": "Argentina",
-              "destinationTypeName": "Buenos",
-              "gradeName": "Refinery",
-              "quantity": 2
-            }
-            ]'
-          ```
+          -d '{
+                  "year": 1999,
+                  "month": 11,
+                  "originName": "USA",
+                  "originTypeName": "PA",
+                  "destinationName": "UK",
+                  "destinationTypeName": "LONDON",
+                  "gradeName": "Refinery",
+                  "quantity": 190
+                }'
+            ```
         * Sample response:
           ```json
           {
-              "status": 201,
-              "message": "Success",
-              "data": {
+          "status": 201,
+          "message": "Success",
+          "data": {
                 "year": 1999,
                 "month": 11,
                 "originName": "USA",
@@ -288,9 +276,9 @@ used to do CRUD operations.
                 "destinationTypeName": "LONDON",
                 "gradeName": "Refinery",
                 "quantity": 190,
-                "uuid": "9aa50db4-6702-4bbd-a4df-3caaef4826ef"
+                "uuid": "947eb299-189f-47e4-a0b7-85ffb2630cbc"
               }
-            }
+          }
           ```
       
     * **Update Crude Oil Import by UUID:** Replaces the entire content of an existing crude oil import record with new data.

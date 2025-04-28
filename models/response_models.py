@@ -1,12 +1,10 @@
 from typing import List
-
-from pydantic import BaseModel, Field
 from uuid import UUID
 
-from models.request_models import (
-    CrudeOilDataModelFilter,
-    CrudeOilDataModelPost,
-)
+from pydantic import BaseModel, Field
+
+from models.request_models import (CrudeOilDataModelFilter,
+                                   CrudeOilDataModelPost)
 
 
 class ResponseModel(BaseModel):
