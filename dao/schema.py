@@ -1,5 +1,4 @@
 import uuid as uuid_lib
-from sqlalchemy import BIGINT, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.dialects.postgresql import UUID
 

@@ -16,19 +16,6 @@ logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
 
 
-# async def commit_into_db(db):
-#     try:
-#         await db.commit()
-#         await db.flush()
-#     except Exception as e:
-#         await db.rollback()
-#         error_text = "Something went wrong inserting record into the database."
-#         logger.error(f"{error_text} {e}")
-#         raise HTTPException(
-#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=error_text
-#         )
-
-
 def add_a_record_to_database(db, data: CrudeOilDataModelPost):
     try:
         row = CrudeOilImportsSchema(**data.model_dump(), uuid=uuid.uuid4())

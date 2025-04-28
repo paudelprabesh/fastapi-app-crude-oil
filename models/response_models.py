@@ -1,11 +1,10 @@
-from typing import List, Union
+from typing import List
 
 from pydantic import BaseModel, Field
 from uuid import UUID
 
 from models.request_models import (
     CrudeOilDataModelFilter,
-    CrudeOilDataModelPut,
     CrudeOilDataModelPost,
 )
 
