@@ -7,7 +7,7 @@ from sqlalchemy import delete
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from models.request_models import CrudeOilDataModelFilter
+from models.request_models import CrudeOilDataModelFilter, CrudeOilDataModelPost
 
 from dao.schema import CrudeOilImportsSchema
 from models.response_models import CrudeOilDataResponseModel
@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 #         )
 
 
-def add_a_record_to_database(db, data: CrudeOilDataModelFilter):
+def add_a_record_to_database(db, data: CrudeOilDataModelPost):
     try:
         row = CrudeOilImportsSchema(**data.model_dump(), uuid=uuid.uuid4())
         db.add(row)

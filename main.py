@@ -29,6 +29,9 @@ and how they are setup.
 
 **Null values**: For simplicity, we don't allow null values to any records. A quick glance showed that there were no nulls
 in the provided dataset, and hence assumed it to simplify design.
+
+**Year and Month**: In addition to be `int`, they also need to be inbetween a certain range to be valid.
+Year should be between 1900 and 2100, and month should be in range of 1-12.
 """
 
 app = FastAPI(

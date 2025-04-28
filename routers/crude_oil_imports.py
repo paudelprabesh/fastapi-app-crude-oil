@@ -127,6 +127,7 @@ async def insert(
     """
     Inserts a new crude oil import record into the database.
     This endpoint allows to create a new crude oil import record.
+    Make sure that the `month` is in range of `[1,12]` and `year` in range of `[1900, 2100]`
 
     ### Parameters
 
@@ -168,6 +169,8 @@ async def insert_bulk(
 
     This endpoint allows clients to create multiple new crude oil import records
     simultaneously, improving efficiency for large data uploads.
+
+    Make sure that for each data, the `month` is in range of `[1,12]` and `year` in range of `[1900, 2100]`
 
     ### Parameters
 
@@ -221,6 +224,8 @@ async def patch_crude_oil_import(
     This endpoint allows clients to modify specific fields of an existing crude oil
     import record.  It uses the PATCH method, so only the fields provided in the
     request will be updated, leaving other fields unchanged.
+
+    Make sure that the `month` is in range of `[1,12]` and `year` in range of `[1900, 2100]`
 
     ### Parameters
 
@@ -278,6 +283,8 @@ async def update_crude_oil_import(
     This endpoint allows clients to update all fields of an existing crude oil import record.
     It uses the PUT method, so the provided data will completely replace the existing
     record.  There should be no missing fields and should confirm to `CrudeOilDataModelPut` schema.
+
+    Make sure that the `month` is in range of `[1,12]` and `year` in range of `[1900, 2100]`
 
     ### Parameters
 

@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from typing import Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException, status
@@ -17,14 +18,13 @@ from models.response_models import (
     PaginatedMetaData,
     PaginatedCrudeOilDataModel,
     CrudeOilDataResponseModel,
-    SingleDataRetrieveNotFoundResponseModel,
 )
 
 logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
 
 
-async def insert_one_data_into_database(db, data):
+async def insert_one_data_into_database(db, data: CrudeOilDataModelPost):
     inserted_data = dal.add_a_record_to_database(db, data)
     formatted_data = CrudeOilDataResponseModel.model_validate(inserted_data)
     try:
@@ -62,7 +62,7 @@ async def get_paginated_crude_oil_imports(
     skip: int = 0,
     limit: int = 100,
 ) -> PaginatedCrudeOilDataModel:
-
+    # Only use set parameters for filtering.
     query_filters = {
         column: value
         for column, value in filters.model_dump().items()
@@ -73,14 +73,22 @@ async def get_paginated_crude_oil_imports(
         dal.get_records_from_db(db=db, skip=skip, limit=limit, filters=query_filters),
         dal.count_records_in_db(db, filters=query_filters),
     )
-
+    # Set metadata
     metadata = PaginatedMetaData(**{"total": total, "skip": skip, "limit": limit})
     return PaginatedCrudeOilDataModel(metadata=metadata, paginated_data=paginated_data)
 
 
 async def patch_crude_oil_import_from_uuid(
     db: AsyncSession, uuid: UUID, patch_data_model: CrudeOilDataModelPatch
-):
+) -> Optional[CrudeOilDataResponseModel]:
+    """
+
+    :param db: db object
+    :param uuid: uuid of the item being patched
+    :param patch_data_model: CrudeOilDataModelPatch data model containing patch values
+    :return:
+    """
+    # Only use set parameters for filtering.
     updates = {k: v for k, v in patch_data_model.model_dump().items() if v is not None}
     updated_row = await dal.update_crude_oil_imports(
         db, filters=[CrudeOilImportsSchema.uuid == uuid], update_data=updates

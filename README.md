@@ -83,12 +83,14 @@ postgres db. Instructions on how to use it are in the `Readme.md` within the sam
 
 ### Experiment
 
-Visit the [swagger UI](http://0.0.0.0:5321/docs#) to add, retrieve, update, delete US crude oil import records.
+Visit the [swagger UI](http://0.0.0.0:5321/docs#) http://0.0.0.0:5321/docs# to add, retrieve, update, delete US crude oil import records.
 Swagger allows you to view request types and all very easily.
 
-### Notes:
+### Design Notes:
 1. `UUID`: UUIDs are used to identify each records. Instead of relying on the database's auto-generated integer IDs, we use `UUID` and hide 
 database id from the client, which is very easy to mess up. 
 For example: A mistaken id for a delete query, deletes a record. It also hides database primary key and how they are setup.
 2. `Null values`: For simplicity, we don't allow null values to any records. A quick glance showed that there were no nulls
 in the provided dataset, and hence assumed it to simplify design.
+3. `Year and Month`. In addition to be `int`, they also need to be inbetween a certain range to be valid.
+Year should be between 1900 and 2100, and month should be in range of 1-12.

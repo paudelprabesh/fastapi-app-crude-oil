@@ -23,7 +23,7 @@ class CrudeOilDataModelBase(BaseModel):
     @field_validator("month")
     def validate_month(cls, value):
         if value is None:
-            return None  # Allow None values
+            return None
         if not 1 <= value <= 12:
             raise ValueError("Month must be between 1 and 12")
         return value
@@ -31,15 +31,15 @@ class CrudeOilDataModelBase(BaseModel):
     @field_validator("year")
     def validate_year(cls, value):
         if value is None:
-            return None  # Allow None values
-        if not 1900 <= value <= 2100:  # Example range, adjust as needed
+            return None
+        if not 1900 <= value <= 2100:
             raise ValueError("Year must be between 1900 and 2100")
         return value
 
 
 class CrudeOilDataModelPost(CrudeOilDataModelBase):
-    year: int
-    month: int
+    year: int = Field(examples=[2000])
+    month: int = Field(examples=[1])
     origin_name: str = Field(alias="originName")
     origin_type_name: str = Field(alias="originTypeName")
     destination_name: str = Field(alias="destinationName")
