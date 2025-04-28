@@ -1,10 +1,43 @@
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from uuid import UUID
 
 
-class CrudeOilDataModelPost(BaseModel):
+class CrudeOilDataModelBase(BaseModel):
+    year: Optional[int] = Field(default=None)
+    month: Optional[int] = Field(default=None)
+    origin_name: Optional[str] = Field(default=None, alias="originName")
+    origin_type_name: Optional[str] = Field(default=None, alias="originTypeName")
+    destination_name: Optional[str] = Field(default=None, alias="destinationName")
+    destination_type_name: Optional[str] = Field(
+        default=None, alias="destinationTypeName"
+    )
+    grade_name: Optional[str] = Field(default=None, alias="gradeName")
+    quantity: Optional[int] = Field(default=None)
+
+    class Config:
+        validate_by_name = True
+        from_attributes = True
+
+    @field_validator("month")
+    def validate_month(cls, value):
+        if value is None:
+            return None  # Allow None values
+        if not 1 <= value <= 12:
+            raise ValueError("Month must be between 1 and 12")
+        return value
+
+    @field_validator("year")
+    def validate_year(cls, value):
+        if value is None:
+            return None  # Allow None values
+        if not 1900 <= value <= 2100:  # Example range, adjust as needed
+            raise ValueError("Year must be between 1900 and 2100")
+        return value
+
+
+class CrudeOilDataModelPost(CrudeOilDataModelBase):
     year: int
     month: int
     origin_name: str = Field(alias="originName")
@@ -23,28 +56,11 @@ class CrudeOilDataModelPut(CrudeOilDataModelPost):
     pass
 
 
-class CrudeOilDataModelFlexible(BaseModel):
-    year: Optional[int] = Field(default=None)
-    month: Optional[int] = Field(default=None)
-    origin_name: Optional[str] = Field(default=None, alias="originName")
-    origin_type_name: Optional[str] = Field(default=None, alias="originTypeName")
-    destination_name: Optional[str] = Field(default=None, alias="destinationName")
-    destination_type_name: Optional[str] = Field(
-        default=None, alias="destinationTypeName"
-    )
-    grade_name: Optional[str] = Field(default=None, alias="gradeName")
-    quantity: Optional[int] = Field(default=None)
-
-    class Config:
-        validate_by_name = True
-        from_attributes = True
-
-
-class CrudeOilDataModelPatch(CrudeOilDataModelFlexible):
+class CrudeOilDataModelPatch(CrudeOilDataModelBase):
     pass
 
 
-class CrudeOilDataModelFilter(CrudeOilDataModelFlexible):
+class CrudeOilDataModelFilter(CrudeOilDataModelBase):
     uuid: Optional[UUID] = Field(default=None, alias="uuid")
     pass
 

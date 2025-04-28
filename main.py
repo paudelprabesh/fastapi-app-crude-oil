@@ -17,9 +17,23 @@ async def lifespan(_: FastAPI):
     yield
 
 
+description = """
+View, Add, Edit, and be creative with the US crude Oil Imports Data. All the endpoints are documented within.
+
+### Notes :
+**UUID:** UUIDs are used to identify  each records.
+Instead of relying on the database's auto-generated integer IDs, we use `UUID` and hide 
+the table row id from the client, which is very easy to mess up. 
+For example: A mistaken id for a delete query, deletes a record. It also hides database primary key 
+and how they are setup.
+
+**Null values**: For simplicity, we don't allow null values to any records. A quick glance showed that there were no nulls
+in the provided dataset, and hence assumed it to simplify design.
+"""
+
 app = FastAPI(
     title="US Crude Oil Imports Data",
-    description="View, Add, Edit, and be creative with the US crude Oil Imports Data.",
+    description=description,
     lifespan=lifespan,
 )
 

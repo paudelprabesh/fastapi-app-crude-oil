@@ -5,19 +5,35 @@ You can use it to create, retrieve, update, and delete records in the dataset.
 
 ### Features
 
-* **Create:** Add new crude oil import records to the database.
-
 * **Retrieve:**
 
-    * List all crude oil import records, in paginated form, allowing you to process large datasets efficiently
+    * **Get Paginated Crude Oil Imports:** Retrieves a list of crude oil import records in paginated form. This allows for efficient processing of large datasets by returning data in smaller, manageable chunks.
+        * Endpoint: `GET /crude-oil-imports/`
+        * Status Code: 200 OK
 
-    * Retrieve a specific record by its UUID.
+    * **Get Crude Oil Imports by UUID:** Retrieves a specific crude oil import record using its unique identifier (UUID).
+        * Endpoint: `GET /crude-oil-imports/{uuid}`
+        * Status Code: 200 OK
+* **Create:**
 
-* **Update:** Modify an existing crude oil import record.
+    * **Insert Crude Oil Import:** Adds a new crude oil import record to the database.
+        * Endpoint: `POST /crude-oil-imports/`
+        * Status Code: 201 Created
+    * **Insert Bulk Crude Oil Imports:** Adds multiple crude oil import records to the database in a single request.
+        * Endpoint: `POST /crude-oil-imports/bulk`
+        * Status Code: 201 Created
+* **Update:**
 
-* **Delete:** Remove a crude oil import record from the database.
-
-* **Filter:** Retrieve records based on specific criteria (e.g., year, originName).
+    * **Patch Crude Oil Import by UUID:** Modifies specific fields of an existing crude oil import record identified by its UUID.  This performs a partial update.
+        * Endpoint: `PATCH /crude-oil-imports/{uuid}`
+        * Status Code: 200 OK
+    * **Update Crude Oil Import by UUID:** Replaces the entire content of an existing crude oil import record with new data.
+        * Endpoint: `PUT /crude-oil-imports/{uuid}`
+        * Status Code: 200 OK
+* **Delete:**
+    * **Delete Crude Oil Import by UUID:** Removes a crude oil import record from the database using its UUID.
+        * Endpoint: `DELETE /crude-oil-imports/{uuid}`
+        * Status Code: 200 OK
 
 ### Prerequisites
 1. **Python**: Please visit https://wiki.python.org/moin/BeginnersGuide/Download to get python installed.
@@ -68,3 +84,11 @@ postgres db. Instructions on how to use it are in the `Readme.md` within the sam
 ### Experiment
 
 Visit the [swagger UI](http://0.0.0.0:5321/docs#) to add, retrieve, update, delete US crude oil import records.
+Swagger allows you to view request types and all very easily.
+
+### Notes:
+1. `UUID`: UUIDs are used to identify each records. Instead of relying on the database's auto-generated integer IDs, we use `UUID` and hide 
+database id from the client, which is very easy to mess up. 
+For example: A mistaken id for a delete query, deletes a record. It also hides database primary key and how they are setup.
+2. `Null values`: For simplicity, we don't allow null values to any records. A quick glance showed that there were no nulls
+in the provided dataset, and hence assumed it to simplify design.
