@@ -354,4 +354,9 @@ used to do CRUD operations from browser or terminal.
           }
         }
         ```
-      
+### File layout
+
+1. All routes are located in `routers/crude_oil_imports.py` file.
+2. `bll/` contains business logic layer code.
+3. `dal/` contains data access layer code. Talks to the database using SQLAlchemy.
+4. `dao/` contains request and response pydantic models.

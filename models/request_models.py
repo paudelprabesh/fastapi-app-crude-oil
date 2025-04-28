@@ -5,8 +5,13 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class CrudeOilDataModelBase(BaseModel):
-    year: Optional[int] = Field(default=None)
-    month: Optional[int] = Field(default=None)
+    """
+    Base model which has all the fields, optional.
+    Subclassed according to endpoint needs.
+    """
+
+    year: Optional[int] = Field(default=None, examples=[2000], ge=1900, le=2100)
+    month: Optional[int] = Field(default=None, examples=[1], ge=1, le=12)
     origin_name: Optional[str] = Field(default=None, alias="originName")
     origin_type_name: Optional[str] = Field(default=None, alias="originTypeName")
     destination_name: Optional[str] = Field(default=None, alias="destinationName")
@@ -14,49 +19,34 @@ class CrudeOilDataModelBase(BaseModel):
         default=None, alias="destinationTypeName"
     )
     grade_name: Optional[str] = Field(default=None, alias="gradeName")
-    quantity: Optional[int] = Field(default=None)
+    quantity: Optional[int] = Field(default=None, examples=[1], ge=1)
 
     class Config:
         validate_by_name = True
         from_attributes = True
 
-    @field_validator("month")
-    def validate_month(cls, value):
-        # None is handled later if need be
-        if value is None:
-            return None
-        if not 1 <= value <= 12:
-            raise ValueError("Month must be between 1 and 12")
-        return value
 
-    @field_validator("year")
-    def validate_year(cls, value):
-        # None is handled later if need be
-        if value is None:
-            return None
-        if not 1900 <= value <= 2100:
-            raise ValueError("Year must be between 1900 and 2100")
-        return value
+class CrudeOilDataModelFilter(CrudeOilDataModelBase):
+    pass
 
-    @field_validator("quantity")
-    def validate_year(cls, value):
-        # None is handled later if need be
-        if value is None:
-            return None
-        if not value > 0:
-            raise ValueError("quantity must be greater than 0.")
-        return value
+
+class CrudeOilDataModelPatch(CrudeOilDataModelBase):
+    pass
 
 
 class CrudeOilDataModelPost(CrudeOilDataModelBase):
-    year: int = Field(examples=[2000])
-    month: int = Field(examples=[1])
+    """
+    Stricter model. Needs complete data to insert into the database.
+    """
+
+    year: int = Field(examples=[2000], ge=1900, le=2100)
+    month: int = Field(examples=[1], ge=1, le=12)
     origin_name: str = Field(alias="originName")
     origin_type_name: str = Field(alias="originTypeName")
     destination_name: str = Field(alias="destinationName")
     destination_type_name: str = Field(alias="destinationTypeName")
     grade_name: str = Field(alias="gradeName")
-    quantity: int = Field(examples=[1])
+    quantity: int = Field(examples=[1], ge=1)
 
     class Config:
         validate_by_name = True
@@ -65,32 +55,3 @@ class CrudeOilDataModelPost(CrudeOilDataModelBase):
 
 class CrudeOilDataModelPut(CrudeOilDataModelPost):
     pass
-
-
-class CrudeOilDataModelPatch(CrudeOilDataModelBase):
-    pass
-
-
-class CrudeOilDataModelFilter(CrudeOilDataModelBase):
-    uuid: Optional[UUID] = Field(default=None, alias="uuid")
-    pass
-
-
-# class CrudeOilDataModelPatch(BaseModel):
-#     # Unique Identifiers
-#     year: int
-#     month: int
-#     origin_name: str = Field(alias="originName")
-#     destination_name: str = Field(alias="destinationName")
-#     grade_name: str = Field(alias="gradeName")
-#
-#     # Non Unique Identifiers
-#     origin_type_name: Optional[str] = Field(default=None, alias="originTypeName")
-#     destination_type_name: Optional[str] = Field(
-#         default=None, alias="destinationTypeName"
-#     )
-#     quantity: Optional[int] = Field(default=None)
-#
-#     class Config:
-#         validate_by_name = True
-#         from_attributes = True

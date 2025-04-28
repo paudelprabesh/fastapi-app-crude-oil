@@ -3,7 +3,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-from models.request_models import CrudeOilDataModelFilter, CrudeOilDataModelPost
+from models.request_models import CrudeOilDataModelPost
 
 
 class ResponseModel(BaseModel):
@@ -53,7 +53,7 @@ class PaginatedMetaData(BaseModel):
 
 class PaginatedCrudeOilDataModel(BaseModel):
     metadata: PaginatedMetaData
-    paginated_data: List[CrudeOilDataModelFilter]
+    paginated_data: List[CrudeOilDataResponseModel]
 
 
 class PaginatedResponseModel(ResponseModel):

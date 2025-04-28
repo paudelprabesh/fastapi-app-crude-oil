@@ -82,11 +82,10 @@ async def patch_crude_oil_import_from_uuid(
     db: AsyncSession, uuid: UUID, patch_data_model: CrudeOilDataModelPatch
 ) -> Optional[CrudeOilDataResponseModel]:
     """
-
-    :param db: db object
+    :param db: sqlalchemy async session object
     :param uuid: uuid of the item being patched
     :param patch_data_model: CrudeOilDataModelPatch data model containing patch values
-    :return:
+    :return: Optional[int, CrudeOilDataResponseModel] patched record data
     """
     # Only use set parameters for filtering.
     updates = {k: v for k, v in patch_data_model.model_dump().items() if v is not None}
@@ -100,7 +99,14 @@ async def patch_crude_oil_import_from_uuid(
 
 async def put_update_crude_oil_import_from_uuid(
     db: AsyncSession, uuid: UUID, patch_data_model: CrudeOilDataModelPut
-):
+) -> Optional[CrudeOilDataResponseModel]:
+    """
+    :param db: sqlalchemy async session object
+    :param uuid: uuid of the item being patched
+    :param patch_data_model: CrudeOilDataModelPatch data model containing patch values
+    :return: Optional[int, CrudeOilDataResponseModel] patched record data
+    """
+    # No need to filter, replace all the received column values.
     updates = patch_data_model.model_dump()
     deleted_row = await dal.update_crude_oil_imports(
         db, filters=[CrudeOilImportsSchema.uuid == uuid], update_data=updates
@@ -110,25 +116,10 @@ async def put_update_crude_oil_import_from_uuid(
     return deleted_row
 
 
-# async def patch_crude_oil_import(db, patch_data_model: CrudeOilDataModelPatch):
-#     unique_columns = {"year", "month", "origin_name", "destination_name", "grade_name"}
-#     # filter based on unique columns
-#     # dynamically can be done using
-#     # filters = [getattr(CrudeOilImportsSchema, key) == value for key, value in patch_data_model.model_dump().items() if key in unique_columns]
-#     filters = [
-#         CrudeOilImportsSchema.year == patch_data_model.year,
-#         CrudeOilImportsSchema.month == patch_data_model.month,
-#         CrudeOilImportsSchema.origin_name == patch_data_model.origin_name,
-#         CrudeOilImportsSchema.destination_name == patch_data_model.destination_name,
-#         CrudeOilImportsSchema.grade_name == patch_data_model.grade_name,
-#         ]
-#     patch_data = {k: v for k, v in patch_data_model.model_dump().items() if v is not None and k not in unique_columns}
-#     updated_data = await dal.patch_crude_oil_imports(db, patch_data=patch_data, filters=filters)
-#     return updated_data
-
-
-def delete_data_from_uuid(db: AsyncSession, uuid: UUID):
-    deleted_row = dal.delete_crude_oil_imports(
+async def delete_data_from_uuid(
+    db: AsyncSession, uuid: UUID
+) -> Optional[CrudeOilDataResponseModel]:
+    deleted_row = await dal.delete_crude_oil_imports(
         db, filters=[CrudeOilImportsSchema.uuid == uuid]
     )
     if not deleted_row:

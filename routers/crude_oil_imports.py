@@ -59,7 +59,7 @@ async def get_paginated_crude_oil_imports(
     ### Returns:
 
     - `Union[PaginatedResponseModel, FailureResponseModel]`: A `PaginatedResponseModel` containing the requested crude oil
-     import data if the request is successful. A FailureResponseModel is returned if an error occurs during processing.
+     import data if the request is successful. A `FailureResponseModel` is returned if an error occurs during processing.
 
     ### Note: Response samples are also shown below by swagger.
     """
@@ -243,6 +243,9 @@ async def patch_crude_oil_import(
     """
     try:
         patched_data = await bll.patch_crude_oil_import_from_uuid(db, uuid, patch_data)
+        # Cannot find the requested data.
+        # Return data in consistent format, 400 error might break frontend sometimes,
+        # rather give out a message with empty data.
         if not patched_data:
             return SingleDataUpdateUnsuccessfulResponseModel(
                 message="No such record exists."
@@ -305,6 +308,9 @@ async def update_crude_oil_import(
         updated_data = await bll.put_update_crude_oil_import_from_uuid(
             db, uuid, update_data
         )
+        # Cannot find the requested data.
+        # Return data in consistent format, 400 error might break frontend sometimes,
+        # rather give out a message with empty data.
         if not updated_data:
             return SingleDataUpdateUnsuccessfulResponseModel(
                 message="No such record exists."
@@ -356,6 +362,9 @@ async def update_crude_oil_import(
 
     try:
         deleted_data = await bll.delete_data_from_uuid(db, uuid)
+        # Cannot find the requested data.
+        # Return data in consistent format, 400 error might break frontend sometimes,
+        # rather give out a message with empty data.
         if not deleted_data:
             return SingleDataUpdateUnsuccessfulResponseModel(
                 message="No such record exists."

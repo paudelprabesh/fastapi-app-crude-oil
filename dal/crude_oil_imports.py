@@ -1,12 +1,13 @@
 import logging
 import uuid
+from typing import Optional
 
 from fastapi import HTTPException, status
 from sqlalchemy import delete, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from dao.schema import CrudeOilImportsSchema
-from models.request_models import CrudeOilDataModelFilter, CrudeOilDataModelPost
+from models.request_models import CrudeOilDataModelPost
 from models.response_models import CrudeOilDataResponseModel
 
 logging.basicConfig(level=logging.ERROR)
@@ -59,7 +60,9 @@ async def count_records_in_db(db, filters):
         )
 
 
-async def update_crude_oil_imports(db, update_data, filters):
+async def update_crude_oil_imports(
+    db, update_data, filters
+) -> Optional[CrudeOilDataResponseModel]:
     try:
         query = (
             update(CrudeOilImportsSchema)
@@ -80,7 +83,9 @@ async def update_crude_oil_imports(db, update_data, filters):
         raise
 
 
-async def delete_crude_oil_imports(db: AsyncSession, filters: list):
+async def delete_crude_oil_imports(
+    db: AsyncSession, filters: list
+) -> Optional[CrudeOilDataResponseModel]:
     try:
         query = (
             delete(CrudeOilImportsSchema)
@@ -90,7 +95,7 @@ async def delete_crude_oil_imports(db: AsyncSession, filters: list):
         result = await db.execute(query)
         deleted_record = result.scalars().all()
         if not deleted_record:
-            return
+            return None
         deleted_row = CrudeOilDataResponseModel.model_validate(deleted_record[0])
         await db.commit()
         return deleted_row
