@@ -23,7 +23,6 @@ class CrudeOilDataModelBase(BaseModel):
 
     class Config:
         validate_by_name = True
-        from_attributes = True
 
 
 class CrudeOilDataModelFilter(CrudeOilDataModelBase):

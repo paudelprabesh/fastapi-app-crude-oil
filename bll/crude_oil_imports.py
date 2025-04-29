@@ -1,9 +1,10 @@
 import asyncio
 import logging
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID
 
-from fastapi import HTTPException, status
+from fastapi import HTTPException
+from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import dal.crude_oil_imports as dal
@@ -24,36 +25,82 @@ logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
 
 
-async def insert_one_data_into_database(db, data: CrudeOilDataModelPost):
-    inserted_data = dal.add_a_record_to_database(db, data)
-    formatted_data = CrudeOilDataResponseModel.model_validate(inserted_data)
+async def insert_one_data_into_database(
+    db: AsyncSession, data: CrudeOilDataModelPost
+) -> Optional[CrudeOilDataResponseModel]:
+    """
+
+    :param db: Async db session sqlalchemy
+    :param data: CrudeOilDataModelPost object containing values to be inserted into db
+    :return: CrudeOilDataResponseModel if successful, else an error is raised
+    """
     try:
-        await db.commit()
-    except Exception as e:
-        await db.rollback()
-        error_text = "Something went wrong inserting record into the database."
-        logger.error(f"{error_text} {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=error_text
+        inserted_data = await dal.insert_single_data_into_database(db, data)
+        formatted_data = CrudeOilDataResponseModel(**inserted_data)
+    except ValidationError as e:
+        logger.error(
+            "Cannot create response model while using the inserted value from db."
+            f"Please check for inconsistent data. {e}"
         )
+        raise
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"{e}")
+        raise
     return formatted_data
 
 
-async def insert_multiple_data_into_database(db, data_list):
-    updated = []
-    for data in data_list:
-        row = dal.add_a_record_to_database(db, data)
-        updated.append(row)
-    updated = [CrudeOilDataResponseModel.model_validate(row) for row in updated]
-    await db.commit()
-    return updated
+async def insert_multiple_data_into_database(
+    db: AsyncSession, data_list: list
+) -> List[CrudeOilDataResponseModel]:
+    """
+
+    :param db: SQLAlchemy async db session
+    :param data_list: list of updates
+    :return: List[CrudeOilDataResponseModel] list of all the updates if successful, else error raised
+    """
+    try:
+        inserted_rows = await dal.insert_multiple_data_into_database(db, data_list)
+        inserted = [
+            CrudeOilDataResponseModel.model_validate(row) for row in inserted_rows
+        ]
+        return inserted
+    except ValidationError as e:
+        logger.error(
+            "Cannot create response model while using the inserted values from db."
+            f"Please check for inconsistent data. {e}"
+        )
+        raise
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(
+            "Cannot convert updated values into response model."
+            "Check for inconsistencies in the db data."
+            f"{e}"
+        )
+        raise
 
 
-async def get_crude_oil_from_uuid(db, uuid):
-    db_data = await dal.get_records_from_db(db, filters={"uuid": uuid})
-    if not db_data:
-        return None
-    return CrudeOilDataResponseModel.model_validate(db_data[0])
+async def get_crude_oil_from_uuid(
+    db: AsyncSession, uuid: UUID
+) -> Optional[CrudeOilDataResponseModel]:
+    try:
+        db_data = await dal.get_records_from_db(db, filters={"uuid": uuid})
+        if not db_data:
+            return None
+        return CrudeOilDataResponseModel.model_validate(db_data[0])
+    except ValidationError as e:
+        logger.error(
+            "Cannot create response model while using the values from db."
+            f"Please check for inconsistent data. {e}"
+        )
+        raise
+    except HTTPException:
+        raise
+    except Exception:
+        raise
 
 
 async def get_paginated_crude_oil_imports(
@@ -73,9 +120,20 @@ async def get_paginated_crude_oil_imports(
         dal.get_records_from_db(db=db, skip=skip, limit=limit, filters=query_filters),
         dal.count_records_in_db(db, filters=query_filters),
     )
-    # Set metadata
-    metadata = PaginatedMetaData(**{"total": total, "skip": skip, "limit": limit})
-    return PaginatedCrudeOilDataModel(metadata=metadata, paginated_data=paginated_data)
+    try:
+        # Set metadata
+        metadata = PaginatedMetaData(**{"total": total, "skip": skip, "limit": limit})
+        return PaginatedCrudeOilDataModel(
+            metadata=metadata, paginated_data=paginated_data
+        )
+    except ValidationError as e:
+        logger.error(
+            "Cannot create Paginated response model while using the values from db."
+            f"Please check for inconsistent data. {e}"
+        )
+        raise
+    except Exception:
+        raise
 
 
 async def patch_crude_oil_import_from_uuid(
@@ -89,12 +147,28 @@ async def patch_crude_oil_import_from_uuid(
     """
     # Only use set parameters for filtering.
     updates = {k: v for k, v in patch_data_model.model_dump().items() if v is not None}
-    updated_row = await dal.update_crude_oil_imports(
-        db, filters=[CrudeOilImportsSchema.uuid == uuid], update_data=updates
-    )
-    if not updated_row:
-        return None
-    return updated_row
+    try:
+        updated_row = await dal.update_crude_oil_imports(
+            db, filters=[CrudeOilImportsSchema.uuid == uuid], update_data=updates
+        )
+        if not updated_row:
+            return None
+        updated_row = CrudeOilDataResponseModel.model_validate(updated_row)
+        return updated_row
+    except ValidationError as e:
+        logger.error(
+            "Cannot create response model using updated data from db."
+            f"Please check for inconsistent data. {e}"
+        )
+        raise
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(
+            "Cannot create response model while getting the patched values from db."
+            f"Please check for inconsistent data. {e}"
+        )
+        raise
 
 
 async def put_update_crude_oil_import_from_uuid(
@@ -108,20 +182,51 @@ async def put_update_crude_oil_import_from_uuid(
     """
     # No need to filter, replace all the received column values.
     updates = patch_data_model.model_dump()
-    deleted_row = await dal.update_crude_oil_imports(
-        db, filters=[CrudeOilImportsSchema.uuid == uuid], update_data=updates
-    )
-    if not deleted_row:
-        return None
-    return deleted_row
+    try:
+        updated_row = await dal.update_crude_oil_imports(
+            db, filters=[CrudeOilImportsSchema.uuid == uuid], update_data=updates
+        )
+        if not updated_row:
+            return None
+        updated_row = CrudeOilDataResponseModel.model_validate(updated_row)
+        return updated_row
+    except ValidationError as e:
+        logger.error(
+            "Cannot create response model using updated data from db."
+            f"Please check for inconsistent data. {e}"
+        )
+        raise
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(
+            "Cannot create response model while getting the patched values from db."
+            f"Please check for inconsistent data. {e}"
+        )
+        raise
 
 
 async def delete_data_from_uuid(
     db: AsyncSession, uuid: UUID
 ) -> Optional[CrudeOilDataResponseModel]:
-    deleted_row = await dal.delete_crude_oil_imports(
-        db, filters=[CrudeOilImportsSchema.uuid == uuid]
-    )
-    if not deleted_row:
-        return None
-    return deleted_row
+    try:
+        deleted_row = await dal.delete_crude_oil_imports(
+            db, filters=[CrudeOilImportsSchema.uuid == uuid]
+        )
+        if not deleted_row:
+            return None
+        return CrudeOilDataResponseModel.model_validate(deleted_row)
+    except ValidationError as e:
+        logger.error(
+            "Cannot create response model using deleted data."
+            f"Please check for inconsistent data. {e}"
+        )
+        raise
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(
+            "Cannot create response model while getting the patched values from db."
+            f"Please check for inconsistent data. {e}"
+        )
+        raise

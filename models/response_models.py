@@ -11,6 +11,10 @@ class ResponseModel(BaseModel):
     message: str
     data: dict = Field(default_factory=dict)
 
+    class Config:
+        validate_by_name = True
+        from_attributes = True
+
 
 class CrudeOilDataResponseModel(CrudeOilDataModelPost):
     uuid: UUID
@@ -72,3 +76,9 @@ class SingleDataUpdateUnsuccessfulResponseModel(ResponseModel):
     status: int = 400
     message: str = "Failed"
     data: dict = {}
+
+
+# class SingleDataInsertUnsuccessfulResponseModel(ResponseModel):
+#     status: int = 400
+#     message: str = "Failed"
+#     data: dict = {}

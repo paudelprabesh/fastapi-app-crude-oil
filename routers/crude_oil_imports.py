@@ -2,7 +2,7 @@ import logging
 from typing import List, Union
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import bll.crude_oil_imports as bll
@@ -36,8 +36,8 @@ logger = logging.getLogger(__name__)
     response_model=Union[PaginatedResponseModel, FailureResponseModel],
 )
 async def get_paginated_crude_oil_imports(
-    skip: int = 0,
-    limit: int = 500,
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=500, ge=0),
     filters: CrudeOilDataModelFilter = Depends(CrudeOilDataModelFilter),
     db: AsyncSession = Depends(get_db),
 ) -> Union[PaginatedResponseModel, FailureResponseModel]:
