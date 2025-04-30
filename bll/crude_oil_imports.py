@@ -8,7 +8,7 @@ from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import dal.crude_oil_imports as dal
-from dao.schema import CrudeOilImportsSchema
+from dao.schema import CrudeOilImports
 from models.request_models import (
     CrudeOilDataModelFilter,
     CrudeOilDataModelPatch,
@@ -146,10 +146,10 @@ async def patch_crude_oil_import_from_uuid(
     :return: Optional[int, CrudeOilDataResponseModel] patched record data
     """
     # Only use set parameters for filtering.
-    updates = {k: v for k, v in patch_data_model.model_dump().items() if v is not None}
+    # updates = {k: v for k, v in patch_data_model.model_dump().items() if v is not None}
     try:
         updated_row = await dal.update_crude_oil_imports(
-            db, filters=[CrudeOilImportsSchema.uuid == uuid], update_data=updates
+            db, filters=[CrudeOilImports.uuid == uuid], update_data_model=patch_data_model
         )
         if not updated_row:
             return None
@@ -181,10 +181,10 @@ async def put_update_crude_oil_import_from_uuid(
     :return: Optional[int, CrudeOilDataResponseModel] patched record data
     """
     # No need to filter, replace all the received column values.
-    updates = patch_data_model.model_dump()
+    # updates = patch_data_model.model_dump()
     try:
         updated_row = await dal.update_crude_oil_imports(
-            db, filters=[CrudeOilImportsSchema.uuid == uuid], update_data=updates
+            db, filters=[CrudeOilImports.uuid == uuid], update_data_model=patch_data_model
         )
         if not updated_row:
             return None
@@ -211,7 +211,7 @@ async def delete_data_from_uuid(
 ) -> Optional[CrudeOilDataResponseModel]:
     try:
         deleted_row = await dal.delete_crude_oil_imports(
-            db, filters=[CrudeOilImportsSchema.uuid == uuid]
+            db, filters=[CrudeOilImports.uuid == uuid]
         )
         if not deleted_row:
             return None

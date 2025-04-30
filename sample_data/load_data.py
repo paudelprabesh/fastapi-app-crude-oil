@@ -4,11 +4,11 @@ import csv
 import httpx
 
 URL = "http://0.0.0.0:5321/crude-oil-imports/bulk"
-BATCH_SIZE = 10000
+BATCH_SIZE = 5000
 
 
 async def main():
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=20) as client:
         with open("data.csv", newline="") as csvfile:
             reader = csv.DictReader(csvfile)
             batch, count = [], 0
