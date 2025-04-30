@@ -149,7 +149,9 @@ async def patch_crude_oil_import_from_uuid(
     # updates = {k: v for k, v in patch_data_model.model_dump().items() if v is not None}
     try:
         updated_row = await dal.update_crude_oil_imports(
-            db, filters=[CrudeOilImports.uuid == uuid], update_data_model=patch_data_model
+            db,
+            filters=[CrudeOilImports.uuid == uuid],
+            update_data_model=patch_data_model,
         )
         if not updated_row:
             return None
@@ -184,7 +186,9 @@ async def put_update_crude_oil_import_from_uuid(
     # updates = patch_data_model.model_dump()
     try:
         updated_row = await dal.update_crude_oil_imports(
-            db, filters=[CrudeOilImports.uuid == uuid], update_data_model=patch_data_model
+            db,
+            filters=[CrudeOilImports.uuid == uuid],
+            update_data_model=patch_data_model,
         )
         if not updated_row:
             return None
