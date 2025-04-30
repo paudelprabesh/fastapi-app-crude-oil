@@ -12,11 +12,11 @@ class CrudeOilImportsSchema(Base):
     __tablename__ = "crude_oil_imports"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     uuid: Mapped[uuid_lib.UUID] = mapped_column(
-        UUID(as_uuid=True), default=uuid_lib.uuid4, unique=True, nullable=False
+        UUID(as_uuid=True), default=uuid_lib.uuid4, unique=True, nullable=False, index=True
     )
     year: Mapped[int] = mapped_column()
     month: Mapped[int] = mapped_column()
-    origin_name: Mapped[str] = mapped_column()
+    origin_name: Mapped[str] = mapped_column(index=True)
     origin_type_name: Mapped[str] = mapped_column()
     destination_name: Mapped[str] = mapped_column()
     destination_type_name: Mapped[str] = mapped_column()
