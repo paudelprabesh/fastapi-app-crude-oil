@@ -61,6 +61,16 @@ The following design principles were applied in the development of this API:
         * **Data Integrity:** Using UUIDs significantly reduces the risk of accidentally modifying or deleting the wrong record.
           For example, a client providing an incorrect integer ID in a delete request could unintentionally delete a different record.  UUIDs make such errors far less likely.
         * **Security:** UUIDs obscure the database's primary key structure and prevent clients from inferring how records are organized or numbered. 
+* **Database Design Approach (Denormalization for Performance):**
+    * In the main branch, the database schema adopts a denormalized approach for certain attributes 
+    (such as origin type, destination type, and grade, storing their names directly in the main imports table rather than
+    using separate lookup tables with foreign keys). However, in the branch `normalized-database`,
+    I have normalized the database. See the normalized schema
+    [here](https://github.com/paudelprabesh/fastapi-app-crude-oil/blob/normalized-schema/dao/schema.py).
+    * **Rationale:**
+        * This design prioritizes **performance** to quickly load all rows from the data.csv. 
+        * **Trade-off:** This approach trades storage for speed.
+
 * **Non-Nullable Values:**
     * For simplicity and data consistency, this API does not allow to insert null values in any record fields.
     If we really want to erase a column value, we can use an empty string for the string columns, the integer columns 
