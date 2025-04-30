@@ -60,6 +60,3 @@ class Grade(Base):
     name: Mapped[str] = mapped_column(String, primary_key=True, unique=True, nullable=False, index=True)
     imports: Mapped[List["CrudeOilImports"]] = relationship(back_populates="grade")
 
-
-    def __repr__(self):
-        return "<Destination Type: name='{self.name}'>"
