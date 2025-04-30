@@ -143,8 +143,7 @@ async def insert_multiple_data_into_database(db: AsyncSession, data_list: list) 
 async def insert_single_data_into_database(
     db: AsyncSession, data: CrudeOilDataModelPost
 ) -> dict:
-    inserted_data = add_a_record_to_database(db, data)
-    inserted_data = inserted_data.__dict__.copy()
+    inserted_data = await add_to_db_before_commit(data, db)
     try:
         await db.commit()
     except Exception as e:
